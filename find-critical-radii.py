@@ -1,44 +1,30 @@
-import numpy as np
+import scipy as sp
 from parameters import modes, tfEDO
 from functions import lamb
 
-# https://mpmath.org/doc/current/calculus/optimization.html?highlight=roots
+def findCriticalTime(x, tf):
+    tcArr = []
+    for mode in x:
+        if(lamb(mode, 0) >= 0):
+            tcArr.append(0)
+        else:
+            def lamb_n(t):
+                return lamb(mode, t)
+            tc = sp.optimize.root_scalar(lamb_n,x0=0,bracket=[0,tf/2], method="bisect")
+            tcArr.append(tc.root)
+    return tcArr
 
-# This function was tested for findMaxRadius(14, 0, 3000, 10e-5)
+# print(lamb(7, 0))
+print(findCriticalTime(modes, tfEDO))
 
-def findMaxRadius(n,ti, tf, err):
-    """
-    Find the maximmum radius for the mode n given the interval [ti,tf] to search in
-    
-    Paramenters:
-        n - is the mode
-        
-        ti - initial time
-        
-        tf - final time
-        
-        err - minimum accepted error
-    """
-    t0N = ti
-    tfN = tf
-    tm=(tf-ti)/2
-    print(lamb(n, ti), lamb(n, tm), lamb(n, tf))
-    
-    while(err < (tfN-t0N)/2):
-        for t in [t0N, tm, tfN]:
-            # print(f'lambda({n}, {t}) = {lamb(n,t)}')
-            if(lamb(n, t)>0):
-                tfN=min(t,tfN)
-                # print(f'tfN ={tfN}')            
-            if(lamb(n, t)<0):
-                t0N=max(t,t0N)
-            tm=(tfN+t0N)/2
-                
-        # print(t0N,tm,tfN)
-    
-    return (tfN+t0N)/2
+# t=np.arange(tc.root-tc.root/2,tc.root+tc.root/2,tc.root/50)
 
-tc = findMaxRadius(modes[1], 0, tfEDO, 10e-5)
+# fig, ax = plt.subplots()
+# ax.plot(t, lamb_n(t))
 
-print(tc)
-print(lamb(modes[1],tc))
+# ax.set(xlabel='t', ylabel='Growth Rate',
+#         title=f'Growth rate for mode {modes[1]}')
+# ax.grid()
+
+# fig.savefig(f'./{modes[1]}/test_growthrate_{modes[1]}.png')
+# plt.show()
