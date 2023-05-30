@@ -1,7 +1,8 @@
 import numpy as np
 
 fund = 7;
-modes = [fund*1, fund*2] # Modos de Fourier a serem usados    
+modes = [fund*1, fund*2] # Modos de Fourier a serem usados  
+modesTotal = modes + ((-1)*np.array(modes)).tolist()  
 R0 = 3 # Raio Inicial
 amp1 = R0/2500 # Amplitude dos modos
 amp2 = 0

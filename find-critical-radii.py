@@ -1,5 +1,4 @@
 import scipy as sp
-from parameters import modes, tfEDO
 from functions import lamb
 
 def findCriticalTime(x, tf):
@@ -14,10 +13,6 @@ def findCriticalTime(x, tf):
             tcArr.append(tc.root)
     return tcArr
 
-# print(lamb(7, 0))
-print(findCriticalTime(modes, tfEDO))
-
-# t=np.arange(tc.root-tc.root/2,tc.root+tc.root/2,tc.root/50)
 
 # fig, ax = plt.subplots()
 # ax.plot(t, lamb_n(t))
